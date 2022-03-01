@@ -44,7 +44,7 @@ function init()
     if g_game.isOnline() then
         skillsWindow:setupOnStart()
     end
-    ProtocolGame.registerExtendedJSONOpcode(206, parseOpcode)
+    ProtocolGame.registerExtendedOpcode(206, parseOpcode)
 end
 
 function terminate()
@@ -498,6 +498,7 @@ function onBaseSkillChange(localPlayer, id, baseLevel)
 end
 
 function parseOpcode(protocol, opcode, data)
+	data = json.decode(data)
 	setSkillValue('skillId13', data.skill)
 	setSkillPercent('skillId13', data.percent, tr('You have %s percent to go', 100 - data.percent))
 end
