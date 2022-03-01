@@ -44,6 +44,7 @@ function init()
     if g_game.isOnline() then
         skillsWindow:setupOnStart()
     end
+    ProtocolGame.registerExtendedOpcode(206, parseOpcode)
 end
 
 function terminate()
@@ -494,4 +495,9 @@ end
 
 function onBaseSkillChange(localPlayer, id, baseLevel)
     setSkillBase('skillId' .. id, localPlayer:getSkillLevel(id), baseLevel)
+end
+
+function parseOpcode(protocol, opcode, data)
+	setSkillValue('skillId13', data.skill)
+	setSkillPercent('skillId13', data.percent, tr('You have %s percent to go', 100 - data.percent))
 end

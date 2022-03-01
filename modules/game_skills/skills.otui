@@ -209,3 +209,9 @@ MiniWindow
       SkillNameLabel
         !text: tr('Mana Leech Amount')
       SkillValueLabel
+
+    SmallSkillButton
+      id: skillId13
+      SkillNameLabel
+        !text: tr('Cooking')
+      SkillValueLabel
