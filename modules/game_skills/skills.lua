@@ -44,7 +44,7 @@ function init()
     if g_game.isOnline() then
         skillsWindow:setupOnStart()
     end
-    ProtocolGame.registerExtendedOpcode(206, parseOpcode)
+    ProtocolGame.registerExtendedJSONOpcode(206, parseOpcode)
 end
 
 function terminate()
