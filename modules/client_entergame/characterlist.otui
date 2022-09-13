@@ -1,6 +1,10 @@
-CharacterWidget < UIWidget
-  height: 14
-  background-color: alpha
+CharacterWidget < Panel
+  border-color: alpha
+  padding: 7
+  padding-top: 3
+  image-source: /images/ui/miniwindow
+  image-border: 23
+  border-width: 1
   &updateOnStates: |
     function(self)
       local children = self:getChildren()
@@ -12,71 +16,106 @@ CharacterWidget < UIWidget
   @onSetup: self:updateOnStates()
 
   $focus:
-    background-color: #ffffff22
+    border-color: #ffffff
 
   Label
     id: name
     color: #bbbbbb
     anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    height: 18
+
+  Panel
+    id: outfit
+    anchors.top: prev.bottom
+    anchors.bottom: next.top
     anchors.left: parent.left
-    font: verdana-11px-monochrome
-    text-auto-resize: true
-    background-color: alpha
-    text-offset: 2 0
-
-    $on:
-      color: #ffffff
-
-  Label
-    id: worldName
-    color: #bbbbbb
-    anchors.top: parent.top
     anchors.right: parent.right
-    margin-right: 5
-    font: verdana-11px-monochrome
-    text-auto-resize: true
-    background-color: alpha
-    &baseText: '(%s)'
+    image-source: /images/ui/textedit
+    image-border: 2
+    margin-top: 4
+    margin-bottom: 3
 
-    $on:
-      color: #ffffff
+    UICreature
+      id: creature
+      anchors.centerIn: parent
+      size: 64 64
+      animate: true
+
+  Panel
+    id: info
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    image-source: /images/ui/price
+    image-border: 2
+    margin-top: 4
+    margin-bottom: 3
+    height: 28
+
+    Label
+      id: vocation
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+
+    Label
+      id: worldName
+      anchors.top: vocation.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
 
 MainWindow
   id: charactersWindow
   !text: tr('Character List')
   visible: false
+  size: 424 400
+  $mobile:
+    size: 424 280
   @onEnter: CharacterList.doLogin()
   @onEscape: CharacterList.hide(true)
   @onSetup: |
     g_keyboard.bindKeyPress('Up', function() self:getChildById('characters'):focusPreviousChild(KeyboardFocusReason) end, self)
     g_keyboard.bindKeyPress('Down', function() self:getChildById('characters'):focusNextChild(KeyboardFocusReason) end, self)
+    g_keyboard.bindKeyPress('Left', function() self:getChildById('characters'):focusPreviousChild(KeyboardFocusReason) end, self)
+    g_keyboard.bindKeyPress('Right', function() self:getChildById('characters'):focusNextChild(KeyboardFocusReason) end, self)
     if g_game.getFeature(GamePreviewState) then
       self:setSize({width = 350, height = 400})
     else
       self:setSize({width = 250, height = 248})
     end
 
-  TextList
+  ScrollablePanel
     id: characters
     background-color: #565656
     anchors.top: parent.top
     anchors.left: parent.left
-    anchors.right: characterListScrollBar.left
-    anchors.bottom: accountStatusCaption.top
-    margin-bottom: 5
-    padding: 1
+    anchors.right: parent.right
+    anchors.bottom: separator2.top
+    image-source: /images/ui/textedit
+    image-border: 1
+    padding: 5
     focusable: false
     vertical-scrollbar: characterListScrollBar
     auto-focus: first
+    layout:
+      type: grid
+      cell-size: 120 145
+      flow: true
+      cell-spacing: 5
 
   VerticalScrollBar
     id: characterListScrollBar
-    anchors.top: parent.top
-    anchors.bottom: accountStatusCaption.top
-    anchors.right: parent.right
-    margin-bottom: 5
-    step: 14
+    anchors.top: characters.top
+    anchors.bottom: characters.bottom
+    anchors.right: characters.right
+    step: 50
     pixels-scroll: true
+
+  HorizontalSeparator
+    id: separator2
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: next.top
+    margin-bottom: 10
 
   Label
     id: accountStatusCaption

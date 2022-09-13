@@ -1,6 +1,7 @@
 CharacterList = {}
 
 -- private variables
+local vocations = {"None", "Sorcerer", "Druid", "Paladin", "Knight", "MS", "ED", "RP", "EK"}
 local charactersWindow
 local loadBox
 local characterList
@@ -255,11 +256,27 @@ function CharacterList.create(characters, account, otui)
     local focusLabel
     for i, characterInfo in ipairs(characters) do
         local widget = g_ui.createWidget('CharacterWidget', characterList)
+
+        if (characterInfo.lookType) then
+            local outfitWidget = widget.getChildById(widget, 'outfit')
+
+            outfitWidget.getChildById(outfitWidget, 'creature'):setOutfit({
+                type = characterInfo.lookType,
+                body = characterInfo.lookBody,
+                head = characterInfo.lookHead,
+                legs = characterInfo.lookLegs,
+                feet = characterInfo.lookFeet,
+                addons = characterInfo.lookAddons
+            })
+        end
+
         for key, value in pairs(characterInfo) do
             local subWidget = widget:getChildById(key)
             if subWidget then
                 if key == 'outfit' then -- it's an exception
                     subWidget:setOutfit(value)
+                elseif key == 'vocation' then
+                    subWidget:setText(characterInfo.level .. ' ' .. vocations[value + 1])
                 else
                     local text = value
                     if subWidget.baseText and subWidget.baseTranslate then
