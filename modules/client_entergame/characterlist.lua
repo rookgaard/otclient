@@ -1,6 +1,7 @@
 CharacterList = {}
 
 -- private variables
+-- Credits for OTUI part - Kasteria Team
 local vocations = {"None", "Sorcerer", "Druid", "Paladin", "Knight", "MS", "ED", "RP", "EK"}
 local charactersWindow
 local loadBox
